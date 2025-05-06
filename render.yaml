@@ -6,4 +6,4 @@ services:
     startCommand: node server.js
     envVars:
       - key: MONGODB_URI
-        value: mongodb+srv://jeronorhodah:M03310@cluster.mongodb.net/eventDB
+        value: mongodb+srv://jeronorhodah:M03310@m0.axwbnlk.mongodb.net/?retryWrites=true&w=majority&appName=M0
