@@ -1,37 +1,283 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Manager</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        form { margin-bottom: 20px; }
-        input, textarea { width: 100%; padding: 8px; margin: 5px 0 15px; }
-        button { background: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
-        .event { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-secondary: #6b7280;
+            --border: #e5e7eb;
+            --success: #10b981;
+            --radius: 0.5rem;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 3rem;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-family: 'Inter', Arial, sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: var(--card-bg);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .date-time-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .events-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .event {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .event h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .event-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .event-description {
+            margin-top: 0.75rem;
+            color: var(--text);
+        }
+
+        .price-tag {
+            display: inline-block;
+            background-color: #f3f4f6;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .date-time-group {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <h1>Event Manager</h1>
     
-    <h2>Add New Event</h2>
-    <form id="eventForm">
-        <label>Title:</label>
-        <input type="text" name="title" required>
+    <div class="container">
+        <div class="card">
+            <h2>Add New Event</h2>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+                
+                <div class="date-time-group">
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate" name="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventTime">Time</label>
+                        <input type="time" id="eventTime" name="eventTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" name="price" step="0.01" placeholder="0.00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="link">Event URL</label>
+                    <input type="url" id="link" name="link" placeholder="https://example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="imageUrl">Image URL</label>
+                    <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com/image.jpg">
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location">
+                </div>
+                
+                <button type="submit">Add Event</button>
+            </form>
+        </div>
         
-        <label>Description:</label>
-        <textarea name="description"></textarea>
-        
-        <label>Date:</label>
-        <input type="datetime-local" name="date" required>
-        
-        <label>Location:</label>
-        <input type="text" name="location">
-        
-        <button type="submit">Add Event</button>
-    </form>
-    
-    <h2>Upcoming Events</h2>
-    <div id="eventsList"></div>
+        <div>
+            <h2>Upcoming Events</h2>
+            <div id="eventsList" class="events-container"></div>
+        </div>
+    </div>
 
     <script>
         document.getElementById('eventForm').addEventListener('submit', async (e) => {
@@ -41,8 +287,11 @@
             const eventData = {
                 title: formData.get('title'),
                 description: formData.get('description'),
-                date: new Date(formData.get('date')),
-                location: formData.get('location')
+                date: new Date(`${formData.get('eventDate')}T${formData.get('eventTime')}`),
+                location: formData.get('location'),
+                price: parseFloat(formData.get('price')) || 0,
+                link: formData.get('link') || undefined,
+                imageUrl: formData.get('imageUrl') || undefined
             };
             
             try {
@@ -67,14 +316,23 @@
                 const events = await response.json();
                 
                 const eventsList = document.getElementById('eventsList');
-                eventsList.innerHTML = events.map(event => `
-                    <div class="event">
-                        <h3>${event.title}</h3>
-                        <p>${new Date(event.date).toLocaleString()}</p>
-                        <p>${event.location || ''}</p>
-                        <p>${event.description || ''}</p>
-                    </div>
-                `).join('');
+                eventsList.innerHTML = events.map(event => {
+                    const eventDate = new Date(event.date);
+                    const formattedDate = eventDate.toLocaleDateString();
+                    const formattedTime = eventDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    
+                    return `
+                        <div class="event">
+                            <h3>${event.title}</h3>
+                            <div class="event-meta">
+                                <span>${formattedDate} at ${formattedTime}</span>
+                                ${event.price ? `<span class="price-tag">$${event.price.toFixed(2)}</span>` : ''}
+                            </div>
+                            ${event.location ? `<div>${event.location}</div>` : ''}
+                            ${event.description ? `<div class="event-description">${event.description}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
             } catch (error) {
                 console.error('Error loading events:', error);
             }
